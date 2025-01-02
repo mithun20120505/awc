@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All Users</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.9/css/responsive.dataTables.min.css">
+
+</head>
+<body>
+    <h1>All Users</h1>
+
+    <!-- Search Form -->
+    <form action="/search" method="POST">
+        <input type="text" name="searchQuery" placeholder="Search by name...">
+        <button type="submit">Search</button>
+    </form>
+
+    <!-- File Upload -->
+    <h2>Upload Excel File</h2>
+    <form action="/upload" method="POST" enctype="multipart/form-data">
+        <input type="file" name="file" accept=".xlsx, .xls" required>
+        <button type="submit">Upload</button>
+    </form>
+
+    <!-- Users Table -->
+    <table id="usersTable" class="display responsive nowrap" style="width:100%">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Father/Husband Name</th>
+                <th>Village</th>
+                <th>Ward</th>
+                <th>EPIC Number</th>
+                <th>Ration No</th>
+                <th>Scheme</th>
+                <th>When</th>
+                <th>Has Disease</th>
+                <th>Disease Name</th>
+                <th>Disease When</th>
+                <th>Has House</th>
+                <th>House Type</th>
+                <th>House Status</th>
+                <th>House When</th>
+                <th>Katcha/Pakka Ghar</th>
+                <th>Handicapped </th>
+                <th>BPL</th>
+                <th>Insurance</th>
+                <th>Qualification</th>
+                <th>Occupation</th>
+                <th>Aadhaar Card No</th>
+                <th>Mobile No</th>
+                <th>Street</th>
+                <th>Date of Birth</th>
+                <th>Bank Account</th>
+                <th>Drinking Water</th>
+                <th>Cow Shed</th>
+                <th>Has Cow</th>
+                <th>Landless</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% users.forEach(function(user) { %>
+                <tr>
+                    <td><%= user.userName %></td>
+                    <td><%= user.fatherHusbandName %></td>
+                    <td><%= user.village %></td>
+                    <td><%= user.ward %></td>
+                    <td><%= user.epicNumber %></td>
+                    <td><%= user.rationDetails.rationNo %></td>
+                    <td><%= user.rationDetails.rationType === "1" ? "State" : user.rationDetails.rationType === "2" ? "Central" : "" %></td>
+                    <td><%= user.rationDetails.activatedOn %></td>
+                    <td><%= user.healthDetails.hasDisease === false ? "No" : "Yes" %></td>
+                    <td><%= user.healthDetails.diseaseName %></td>
+                    <td><%= user.healthDetails.diseaseDate %></td>
+                    <td><%= user.ruralHouse.hasHouse === false ? "No" : "Yes" %></td>
+                    <td><%= user.ruralHouse.houseType === "1" ? "PMAY" : user.ruralHouse.houseType === "2" ? "Nirman Shramika" : user.ruralHouse.houseType === "3" ?  "Fani" : user.ruralHouse.houseType === "4" ? "Other" : "" %></td>
+                    <td><%= user.ruralHouse.houseStatus === false ? "No" : "Yes" %></td>
+                    <td><%= user.ruralHouse.houseDate %></td>
+                    <td><%= user.katchaPakkaGhar %></td>
+                    <td><%= user.isHandicapped === false ? "No" : "Yes" %></td>
+                    <td><%= user.bplStatus === false ? "No" : "Yes" %></td>
+                    <td><%= user.insuranceStatus === false ? "No" : "Yes" %></td>
+                    <td><%= user.qualification %></td>
+                    <td><%= user.occupation %></td>
+                    <td><%= user.aadhaarCardNo %></td>
+                    <td><%= user.mobileNo %></td>
+                    <td><%= user.street %></td>
+                    <td><%= user.dob %></td>
+                    <td><%= user.bankAccount === false ? "No" : "Yes" %></td>
+                    <td><%= user.drinkingWater === false ? "No" : "Yes" %></td>
+                    <td><%= user.cowShed === false ? "No" : "Yes" %></td>
+                    <td><%= user.hasCow === false ? "No" : "Yes" %></td>
+                    <td><%= user.landless === false ? "No" : "Yes" %></td>
+                    <td>
+                        <a href="/edit/<%= user._id %>">Edit</a>
+                        <form action="/delete/<%= user._id %>" method="POST" style="display:inline;">
+                            <button type="submit">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/responsive/2.2.9/js/dataTables.responsive.min.js"></script> -->
+    <script src="https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/responsive/2.2.7/js/dataTables.responsive.min.js"></script>
+
+    <script>
+            $(document).ready(function() {
+                $('#usersTable').DataTable({     // Show a 'processing' indicator while loading
+                  "serverSide": true,
+                  responsive: true,
+                //  scrollY: '400px', // Vertical scrolling
+                  //scrollX: true, // Horizontal scrolling
+                  scrollCollapse: true, // Collapse the table when data is smaller than the scrolling container
+                  paging: true, // Enable pagination
+                   pageLength: 10, // Set the default number of records per page
+                   lengthMenu: [5, 10, 25, 50], // Option for records per page
+                   searching: true, // Enable search functionality // Enable pagination
+                   "fixedHeader": true,
+                    "columns": [
+                        { "data": "Name" },
+                        { "data": "fatherHusbandName" },
+                        { "data": "Village" },
+                        { "data": "Ward" },
+                        { "data": "Aadhar No." },
+                        { "data": "EPIC Number" },
+                        { "data": "Ration No" },
+                        { "data": "State/Central" },
+                        { "data": "When Activated" },
+                        { "data": "Has Disease" },
+                        { "data": "Disease Name" },
+                        { "data": "Disease When" },
+                        { "data": "Has House" },
+                        { "data": "House Type" },
+                        { "data": "House Status" },
+                        { "data": "House When" },
+                        { "data": "Katcha/Pakka Ghar" },
+                        { "data": "Handicapped" },
+                        { "data": "BPL" },
+                        { "data": "Insurance" },
+                        { "data": "Qualification" },
+                        { "data": "Occupation" },
+                        { "data": "Aadhaar Card No" },
+                        { "data": "Mobile No" },
+                        { "data": "Street" },
+                        { "data": "Date of Birth" },
+                        { "data": "Bank Account" },
+                        { "data": "Drinking Water" },
+                        { "data": "Cow Shed" },
+                        { "data": "Has Cow " },
+                        { "data": "Landless" },
+                        { "data": "Actions", "orderable": false }
+                    ]
+                });
+            });
+        </script>
+</body>
+</html>

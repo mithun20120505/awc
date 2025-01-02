@@ -1,0 +1,271 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f0f0;
+    padding: 20px;
+}
+
+@media only screen and (max-width: 768px) {
+    .form-group {
+        flex: 1 1 100%; /* Stack the form fields vertically */
+    }
+}
+/* Default mobile styling */
+.form-control {
+    width: 100%;
+    padding: 10px;
+}
+
+/* Enhanced for larger screens */
+@media (min-width: 768px) {
+    .form-control {
+        width: 50%;
+    }
+}
+.box {
+    display: -webkit-box;  /* Safari */
+    display: -ms-flexbox;  /* IE 10 */
+    display: flex;         /* Modern browsers */
+}button, select {
+    padding: 15px;
+    font-size: 16px;
+}
+
+
+h1, h2 {
+    color: #333;
+}
+
+form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+input, select, button {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+input.readonly{
+  background-color: #28a745;
+}
+button {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      cursor: pointer;
+}
+.data-entry-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.form-group {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    width: 100%;
+}
+
+.form-group label {
+    width: 200px;
+    text-align: right;
+    padding-right: 10px;
+}
+
+.form-group input, .form-group select {
+    flex: 1;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+      /* Set max-height and overflow for table wrapper */
+
+.card {
+  border-radius: 10px;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.container {
+    width: 80%;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+
+button.tablinks {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 4px;
+    margin-right: 5px;
+    margin-bottom: 10px;
+    font-size: 16px;
+}
+
+button.tablinks.active {
+    background-color: #0056b3;
+}
+
+.tabcontent {
+    border-top: 2px solid #007bff;
+    padding: 20px;
+}
+
+label {
+    display: inline-block;
+    margin-top: 10px;
+}
+
+input[type="text"], input[type="email"], input[type="password"], select {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+button[type="submit"] {
+    background-color: #28a745;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button[type="submit"]:hover {
+    background-color: #218838;
+}
+/* Navbar styling */
+.navbar {
+  background-color: #f8f9fa; /* Light background */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds a shadow for a clean effect */
+}
+
+.navbar-brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #333; /* Dark text color */
+}
+
+.navbar-toggler {
+  border: none;
+  background-color: transparent; /* Removes border around the toggle button */
+}
+
+.navbar-toggler-icon {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='30' height='30' viewBox='0 0 30 30'%3E%3Cpath stroke='rgba%280, 0, 0, 0.5%29' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 7h22M4 15h22M4 23h22'/%3E%3C/svg%3E"); /* Custom icon */
+}
+
+.navbar-nav {
+  margin-left: auto; /* Aligns the items to the right */
+}
+
+.nav-item {
+  margin-left: 1rem;
+}
+
+.nav-link {
+  color: #333; /* Dark text */
+  transition: color 0.3s ease; /* Smooth hover effect */
+}
+
+.nav-link:hover {
+  color: #007bff; /* Link hover color */
+}
+
+.navbar-collapse {
+  justify-content: flex-end;
+}
+
+@media (max-width: 991px) {
+  .navbar-nav {
+    text-align: center;
+  }
+  .nav-item {
+    margin: 1rem 0; /* Margin for collapsed mode */
+  }
+}
+/* Basic Styling for Tabs and Contents */
+.tablinks {
+background-color: #f1f1f1;
+color: black;
+border: 1px solid #ccc;
+padding: 10px 15px;
+cursor: pointer;
+margin: 0;
+}
+.tabcontent {
+display: none;
+padding: 20px;
+border: 1px solid #ccc;
+border-top: none;
+}
+.tablinks.active {
+background-color: #ccc;
+}
+#usersTable {
+    table-layout: auto; /* Allows columns to adjust based on content */
+    width: 100%; /* Sets table width */
+}
+
+#usersTable th, #usersTable td {
+    white-space: nowrap; /* Prevents wrapping for more accurate column sizing */
+}
+#loader {
+  background: rgba(255, 255, 255, 0.8); /* Light overlay effect */
+  width: 100%;
+  height: 100%;
+  position: fixed;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

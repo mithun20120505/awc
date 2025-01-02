@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Manage Locations</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container mt-5">
+    <h2>Add Block, Gram Panchayat, Village, and Ward</h2>
+    <form action="/locations/add-block" method="POST">
+      <div class="mb-3">
+        <label for="blockName" class="form-label">Block Name</label>
+        <input type="text" class="form-control" id="blockName" name="name" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Add Block</button>
+    </form>
+    <form action="/locations/add-gram-panchayat" method="POST">
+      <div class="mb-3">
+        <label for="blockSelect" class="form-label">Select Block</label>
+        <select class="form-control" id="blockSelect" name="blockId" required>
+          <% if (blocks && blocks.length > 0) { %>
+            <option value="">Select Block</option>
+           <% blocks.forEach(bl => { %>
+               <option value="<%= bl._id %>"><%= bl.name %></option>
+           <% }) %>
+           <% } else { %>
+               <option disabled>No Block Available</option>
+         <% } %>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="gpName" class="form-label">Gram Panchayat Name</label>
+        <input type="text" class="form-control" id="gpName" name="name" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Add Gram Panchayat</button>
+    </form>
+
+    <form action="/locations/add-village" method="POST" class="mt-3">
+      <div class="mb-3">
+        <label for="blockSelect" class="form-label">Select Block</label>
+        <select class="form-control" id="blockSelects" name="blockId" required>
+          <% if (blocks && blocks.length > 0) { %>
+            <option value="">Select Block</option>
+           <% blocks.forEach(bl => { %>
+               <option value="<%= bl._id %>"><%= bl.name %></option>
+           <% }) %>
+           <% } else { %>
+               <option disabled>No Block Available</option>
+         <% } %>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="gramPanchayatSelect" class="form-label">Select Gram Panchayat</label>
+        <select class="form-control" id="gramPanchayatSelects" name="gramPanchayatId" required>
+          <option value="">Select Gram Panchayat</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="villageName" class="form-label">Village Name</label>
+        <input type="text" class="form-control" id="villageName" name="name" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Add Village</button>
+    </form>
+
+    <form action="/locations/add-ward" method="POST" class="mt-3">
+      <div class="mb-3">
+        <label for="blockSelect" class="form-label">Select Block</label>
+        <select class="form-control" id="blockSelect2" name="blockId" required>
+          <% if (blocks && blocks.length > 0) { %>
+            <option value="">Select Block</option>
+           <% blocks.forEach(bl => { %>
+               <option value="<%= bl._id %>"><%= bl.name %></option>
+           <% }) %>
+           <% } else { %>
+               <option disabled>No Block Available</option>
+         <% } %>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="gramPanchayatSelect" class="form-label">Select Gram Panchayat</label>
+        <select class="form-control" id="gramPanchayatSelect2" name="gramPanchayatId" required>
+          <option value="">Select Gram Panchayat</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="villageSelect" class="form-label">Select Village</label>
+        <select class="form-control" id="villageSelect" name="villageId" required>
+          <option value="">Select Village</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="wardName" class="form-label">Ward Name</label>
+        <input type="text" class="form-control" id="wardName" name="name" required>
+      </div>
+      <button type="submit" class="btn btn-primary">Add Ward</button>
+    </form>
+
+  </div>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('#blockSelects').change(function() {
+        const blockId = $(this).val();
+        $.get(`/locations/gramPanchayat/${blockId}`, function(gramPanchayats) {
+          $('#gramPanchayatSelects').empty().append('<option value="">Select Gram Panchayat</option>');
+          gramPanchayats.forEach(gp => {
+            $('#gramPanchayatSelects').append(`<option value="${gp._id}">${gp.name}</option>`);
+          });
+        });
+      });
+      $('#blockSelect2').change(function() {
+        const blockId = $(this).val();
+        $.get(`/locations/gramPanchayat/${blockId}`, function(gramPanchayats) {
+          $('#gramPanchayatSelect2').empty().append('<option value="">Select Gram Panchayat</option>');
+          gramPanchayats.forEach(gp => {
+            $('#gramPanchayatSelect2').append(`<option value="${gp._id}">${gp.name}</option>`);
+          });
+        });
+      });
+      $('#gramPanchayatSelect2').change(function() {
+        const gramPanchayatId = $(this).val();
+        $.get(`/locations/villages/${gramPanchayatId}`, function(villages) {
+          $('#villageSelect').empty().append('<option value="">Select Village</option>');
+          villages.forEach(village => {
+            $('#villageSelect').append(`<option value="${village._id}">${village.name}</option>`);
+          });
+        });
+      });
+
+    });
+  </script>
+</body>
+</html>
