@@ -6,6 +6,7 @@ const flash = require('connect-flash');
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const XLSX = require('xlsx');
+const path = require("path");
 const app = express();
 const dotEnv = require("dotenv");
 const LocalStrategy = require('passport-local').Strategy;
@@ -22,7 +23,7 @@ const User = require('./models/User');
 const Survey = require('./models/AwcData');
 // Passport configuration
 require('./config/passport')(passport);
-
+app.use("/uploads", express.static("uploads"));
 app.use(express.static(__dirname + '/public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(session({

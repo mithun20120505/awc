@@ -269,3 +269,78 @@ background-color: #ccc;
   justify-content: center;
   align-items: center;
 }
+.awc-card {
+  width: 300px;
+  background: #f9f9f9;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: left;
+}
+
+.awc-card h3 {
+  font-size: 20px;
+  margin-bottom: 10px;
+  color: #333;
+}
+
+.awc-card p {
+  font-size: 14px;
+  margin: 5px 0;
+  color: #555;
+}
+
+.awc-card .awc-images {
+  display: flex;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.awc-card .awc-images img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.awc-images img:hover {
+  transform: scale(1.1);
+  transition: 0.3s;
+}
+.tile:hover {
+  transform: scale(1.05);
+  transition: all 0.3s ease;
+}
+
+#tilePopup {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.modal-content {
+  max-height: 80vh; /* Adjust the height as needed */
+  overflow-y: auto; /* Enable scrolling */
+}
+.modal {
+  width: 50%; /* or any preferred percentage */
+  margin: auto; /* Center the modal */
+}
+@media (max-width: 768px) {
+  .modal {
+    width: 90%; /* Adjust for smaller screens */
+  }
+}

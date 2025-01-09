@@ -79,8 +79,11 @@
                <button class="nav-link" id="home-tab" onclick="openPage('UploadUser')" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="true">Upload</button>
             </li>
             <li class="nav-item" role="presentation">
-               <button class="nav-link" id="profile-tab" onclick="openPage('TableData')" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Search</button>
+               <button class="nav-link" id="profile-tab" onclick="openPage('TileData')" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Search</button>
             </li>
+            <!-- <li class="nav-item" role="presentation">
+               <button class="nav-link" id="tile-tab" onclick="openPage('TableData')" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="false">Table</button>
+            </li> -->
             <li class="nav-item" role="presentation">
                <button class="nav-link" id="contact-tab" onclick="openPage('FormPage')" data-bs-toggle="tab" data-bs-target="#contact" type="button" role="tab" aria-controls="contact" aria-selected="false">New</button>
             </li>
@@ -93,7 +96,7 @@
             </form>
          </div>
          <!-- Table Data Tab Content -->
-         <div id="TableData" class="tabcontent container mt-5">
+         <div id="TileData" class="tabcontent container mt-5">
             <form action="/search" method="GET">
               <div class="col-md-5">
                 <label for="blockSelect" class="form-label">Block</label>
@@ -125,64 +128,161 @@
                </div>
                <button id="btnSearch" type="submit">Search</button>
             </form>
-            <h3>AWC Details</h3>
-            <table id="usersTable"  class="table table-striped" style="width:100%">
-               <thead>
-                  <tr>
-                     <th>Scheme</th>
-                     <th>Financial year</th>
-                     <th>Name of the Block</th>
-                     <th>Type of Work</th>
-                     <th>Sanction Order No with Date</th>
-                     <th>Name of the GP</th>
-                     <th>Name of the Village</th>
-                     <th>Name of the AWC</th>
-                     <th>W&CD</th>
-                     <th>NREGA</th>
-                     <th>Other</th>
-                     <th>Total</th>
-                     <th>Exenditure</th>
-                     <th>Status</th>
-                     <th>Remark</th>
-                     <th>Drinking Water</th>
-                     <th>Electrification</th>
-                     <th>Toilet</th>
-                     <th>Action</th>
-                  </tr>
-               </thead>
-               <tbody>
-                  <% users.forEach(function(user) { %>
-                  <tr>
-                     <td><%= user.scheme %></td>
-                     <td><%= user.financialYear %></td>
-                     <td><%= user.block.name %></td>
-                     <td><%= user.typeOfWork %></td>
-                     <td><%= user.sanctionOrder %></td>
-                     <td><%= user.gp.name %></td>
-                     <td><%= user.village.name %></td>
-                     <td><%= user.awc %></td>
-                     <td><%= user.WCD %></td>
-                     <td><%= user.NREGA %></td>
-                     <td><%= user.other %></td>
-                     <td><%= user.total %></td>
-                     <td><%= user.expenditure %></td>
-                     <td><%= user.status %></td>
-                     <td><%= user.remark %></td>
-                     <td><%= user.drinkingWater === false ? "No" : "Yes" %></td>
-                     <td><%= user.electrification === false ? "No" : "Yes" %></td>
-                     <td><%= user.toilet === false ? "No" : "Yes" %></td>
-                     <td>
-                        <a class="btn btn-primary btn-xs" href="/edit/<%= user._id %>"><i class="fas fa-edit"></i></a></br>
-                        <!-- <a class="btn btn-danger btn-xs" href="/delete/<%= user._id %>"><i class="fas fa-trash-alt"></i></a> -->
-                     </td>
-                  </tr>
-                  <% }) %>
-               </tbody>
-            </table>
-         </div>
+            <div id="tileContainer" style="display: flex; flex-wrap: wrap; gap: 15px;">
+              <% users.forEach((awc) => { %>
+                <div class="tile" style="width: 200px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1);">
+                  <h4><%= awc.awc %></h4>
+                  <p><strong>Scheme:</strong> <%= awc.scheme %></p>
+                  <p><strong>Status:</strong> <%= awc.status %></p>
+                  <button onclick="previewTile(<%= JSON.stringify(awc) %>)" class="btn btn-primary" style="margin-top: 10px;">Preview</button>
+                </div>
+              <% }) %>
+            </div>
+            <!-- Popup Modal -->
+            <div id="tilePopup" class="modal-dialog modal-lg modal-dialog-centered" style="display: none; position: fixed; top: 10%; left: 50%; transform: translateX(-50%); width: 60%; background: white; padding: 20px; box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); border-radius: 5px; z-index: 1000;">
+              <h2 id="popupTitle">AWC Details</h2>
+              <form id="popupForm" class="modal-content">
+                <label for="popupAWC">AWC Name:</label>
+                <input type="text" id="popupAWC" name="awc" readonly value="" style="width: 100%; margin-bottom: 10px;" />
+                <label for="popupScheme">Scheme:</label>
+                <input type="text" id="popupScheme" name="scheme" readonly value="" style="width: 100%; margin-bottom: 10px;" />
+                <label for="popupStatus">Status:</label>
+                <input type="text" id="popupStatus" name="status" readonly value="" style="width: 100%; margin-bottom: 10px;" />
+                <label for="popupBlock">Block:</label>
+                <input type="text" id="popupBlock" name="block" readonly value="" style="width: 100%; margin-bottom: 10px;" />
+                <label for="popupGp">GP:</label>
+                <input type="text" id="popupGp" name="gp" readonly value="" style="width: 100%; margin-bottom: 10px;" />
+                <label for="popupVillage">Village:</label>
+                <input type="text" id="popupVillage" name="village" readonly value="" style="width: 100%; margin-bottom: 10px;" />
+                <label for="popupFY">Financial Year:</label>
+                <input type="text" id="popupFY" name="financialYear" readonly value="" style="width: 100%; margin-bottom: 10px;" />
+                <label for="popupTypeOfWork">Type of Work:</label>
+                <input type="text" id="popupTypeOfWork" name="typeOfWork" readonly value="" style="width: 100%; margin-bottom: 10px;" />
+                <label for="popupSanctionOrder">Sanction Order No:</label>
+                <input type="text" id="popupSanctionOrder" name="sanctionOrder" readonly value="" style="width: 100%; margin-bottom: 10px;" />
+                <label for="popupWCD">W&CD:</label>
+                <input type="text" id="popupWCD" name="WCD" readonly value="" style="width: 100%; margin-bottom: 10px;" />
+                <label for="popupNREGA">NREGA:</label>
+                <input type="text" id="popupNREGA" name="NREGA" readonly value="" style="width: 100%; margin-bottom: 10px;" />
+                <label for="popupOther">Other:</label>
+                <input type="text" id="popupOther" name="other" readonly value="" style="width: 100%; margin-bottom: 10px;" />
+                <label for="popupTotal">Total:</label>
+                <input type="text" id="popupTotal" name="total" readonly value="" style="width: 100%; margin-bottom: 10px;" />
+                <label for="popupExpenditure">Expenditure:</label>
+                <input type="text" id="popupExpenditure" name="expenditure" readonly value="" style="width: 100%; margin-bottom: 10px;" />
+                <label for="popupRemark">Remark:</label>
+                <input type="text" id="popupRemark" name="remark" readonly value="" style="width: 100%; margin-bottom: 10px;" />
+                <label for="popupDrinkingWater">Drinking Water:</label>
+                <input type="text" id="popupDrinkingWater" name="drinkingWater" readonly value="" style="width: 100%; margin-bottom: 10px;" />
+                <label for="popupElectrification">Electrification:</label>
+                <input type="text" id="popupElectrification" name="electrification" readonly value="" style="width: 100%; margin-bottom: 10px;" />
+                <label for="popupToilet">Toilet:</label>
+                <input type="text" id="popupToilet" name="toilet" readonly value="" style="width: 100%; margin-bottom: 10px;" />
 
+                <div id="popupImages" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;"></div>
+                <button type="button" id="editBtn" class="btn btn-success" style="margin-top: 10px;">Edit</button>
+                <button type="button" onclick="closePopup()" class="btn btn-secondary" style="margin-top: 10px;">Cancel</button>
+              </form>
+            </div>
+
+            <!-- Background Overlay -->
+            <div id="popupOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 999;" onclick="closePopup()"></div>
+            <!-- <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
+               <% if (users && users.length > 0) { %>
+                 <% users.forEach(awc => { %>
+                   <div class="awc-card">
+                     <% if (awc.images && awc.images.length > 0) { %>
+                       <div class="awc-images">
+                         <% awc.images.forEach(image => { %>
+                           <img src="<%= '/uploads/' + image %>" alt="AWC Image" />
+                         <% }) %>
+                       </div>
+                     <% } %>
+                     <h3><%= awc.awc %></h3>
+                     <p><strong>Scheme:</strong> <%= awc.scheme %></p>
+                     <p><strong>Financial Year:</strong> <%= awc.financialYear %></p>
+                     <p><strong>Block:</strong> <%= awc.block.name %></p>
+                     <p><strong>Gram Panchayat:</strong> <%= awc.gp.name %></p>
+                     <p><strong>Village:</strong> <%= awc.village.name %></p>
+                     <p><strong>Status:</strong> <%= awc.status %></p>
+                     <p><a class="btn btn-primary btn-xs" href="/edit/<%= awc._id %>"><i class="fas fa-edit"></i></a></br></p>
+                   </div>
+                 <% }) %>
+
+               <% } else { %>
+                 <p>No AWC details available.</p>
+               <% } %>
+
+
+         </div> -->
+         <!-- <div id="TableData" class="tabcontent container mt-5">
+           <h3>AWC Details</h3>
+
+           <table id="usersTable"  class="table table-striped" style="width:100%">
+              <thead>
+                 <tr>
+                    <th>Scheme</th>
+                    <th>Financial year</th>
+                    <th>Name of the Block</th>
+                    <th>Type of Work</th>
+                    <th>Sanction Order No with Date</th>
+                    <th>Name of the GP</th>
+                    <th>Name of the Village</th>
+                    <th>Name of the AWC</th>
+                    <th>W&CD</th>
+                    <th>NREGA</th>
+                    <th>Other</th>
+                    <th>Total</th>
+                    <th>Exenditure</th>
+                    <th>Status</th>
+                    <th>Remark</th>
+                    <th>Drinking Water</th>
+                    <th>Electrification</th>
+                    <th>Toilet</th>
+                    <th>Action</th>
+                 </tr>
+              </thead>
+              <tbody>
+                 <% users.forEach(function(user) { %>
+                 <tr>
+                    <td><%= user.scheme %></td>
+                    <td><%= user.financialYear %></td>
+                    <td><%= user.block.name %></td>
+                    <td><%= user.typeOfWork %></td>
+                    <td><%= user.sanctionOrder %></td>
+                    <td><%= user.gp.name %></td>
+                    <td><%= user.village.name %></td>
+                    <td><%= user.awc %></td>
+                    <td><%= user.WCD %></td>
+                    <td><%= user.NREGA %></td>
+                    <td><%= user.other %></td>
+                    <td><%= user.total %></td>
+                    <td><%= user.expenditure %></td>
+                    <td><%= user.status %></td>
+                    <td><%= user.remark %></td>
+                    <td><%= user.drinkingWater === false ? "No" : "Yes" %></td>
+                    <td><%= user.electrification === false ? "No" : "Yes" %></td>
+                    <td><%= user.toilet === false ? "No" : "Yes" %></td>
+                    <td>
+                       <a class="btn btn-primary btn-xs" href="/edit/<%= user._id %>"><i class="fas fa-edit"></i></a></br>
+                       <!-- <a class="btn btn-danger btn-xs" href="/delete/<%= user._id %>"><i class="fas fa-trash-alt"></i></a> -->
+                    <!-- </td>
+                 </tr>
+                 <% }) %>
+              </tbody>
+           </table>
+
+         </div> --> -->
          <div id="FormPage" class="tabcontent">
-           <form id="addUserForm" action="/submit" method="POST">
+           <form id="addUserForm" action="/submit" method="POST" enctype="multipart/form-data">
+             <div class="form-group">
+                 <label for="awcImage">Upload Image:</label>
+                 <input type="file" id="images" name="images" accept="image/*" multiple/>
+
+             </div>
+             <div id="imagePreviewContainer" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px; max-width: 100%; overflow-x: auto;">
+              <!-- Image previews will appear here -->
+             </div>
              <div class="form-group">
                 <label>Block:</label>
                 <select name="block" id="block" required>

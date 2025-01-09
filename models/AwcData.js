@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const AwcDataSchema = new mongoose.Schema({
+  images: { type: [String] },
   scheme: String,
   financialYear: String,
   block: { type: mongoose.Schema.Types.ObjectId, ref: 'Block' },

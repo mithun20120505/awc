@@ -1,4 +1,196 @@
+// function previewImage(event) {
+//    const files = event.target.files;
+//    const previewContainer = document.getElementById("imagePreviewContainer");
+//    previewContainer.innerHTML = ""; // Clear existing previews
+//
+//      console.log("previewImage file : "+ files);
+//    for (let i = 0; i < files.length; i++) {
+//      const file = files[i];
+//      const reader = new FileReader();
+//
+//      reader.onload = function (e) {
+//        const imgElement = document.createElement("img");
+//        imgElement.src = e.target.result;
+//
+//        imgElement.style.width = "100px";
+//        imgElement.style.height = "100px";
+//        imgElement.style.objectFit = "cover";
+//         imgElement.style.border = "1px solid #ccc";
+//         imgElement.style.borderRadius = "5px";
+//         previewContainer.appendChild(imgElement);
+//         console.log("previewImage file data : "+ previewContainer);
+//       };
+//
+//       reader.readAsDataURL(file);
+//       console.log("previewImage file reader : "+ reader);
+//   }
+// }
+$(document).ready(function () {
+  $('#images').on('change', function (event) {
+    const files = event.target.files; // Get the selected files
+    const imagePreviewContainer = $('#imagePreviewContainer');
 
+    // Clear existing previews
+    imagePreviewContainer.empty();
+
+    if (files) {
+      Array.from(files).forEach((file) => {
+        if (file.type.startsWith('image/')) {
+          const reader = new FileReader();
+
+          reader.onload = function (e) {
+            // Create an image element
+            const img = $('<img>')
+              .attr('src', e.target.result)
+              .css({
+                width: '100px',
+                height: '100px',
+                objectFit: 'cover',
+                border: '1px solid #ccc',
+                borderRadius: '5px',
+                marginRight: '10px',
+              });
+            imagePreviewContainer.append(img); // Append the image
+          };
+
+          reader.readAsDataURL(file); // Read the file
+        } else {
+          alert('Please upload only image files.');
+        }
+      });
+    }
+  });
+});
+  function deleteImage(imageUrl, index) {
+    const confirmation = confirm('Are you sure you want to delete this image?');
+    if (confirmation) {
+//     const filename = imageUrl.split('/').pop(); // Extract filename from URL
+//     const deleteUrl = `/uploads/${filename}`; // DELETE route on the server
+// console.log("delete url : "+ )
+//     fetch(deleteUrl, { method: 'DELETE' })
+//       .then((response) => {
+//         if (response.ok) {
+//           alert('Image deleted successfully!');
+//           // Remove the image from the UI
+//           const button = document.querySelector(`button[onclick="deleteImage('${imageUrl}', ${index})"]`);
+//           if (button) {
+//             button.parentElement.remove();
+//           }
+//         } else {
+//           alert('Failed to delete the image');
+//         }
+//       })
+//       .catch((error) => {
+//         console.error('Error deleting the image:', error);
+//         alert('An error occurred while deleting the image');
+//       });
+      const container = document.getElementById('uploadedImagesContainer');
+      container.children[index].remove();
+      // Add hidden input to track deleted image
+       const form = document.querySelector('form');
+       const input = document.createElement('input');
+       input.type = 'hidden';
+       input.name = 'deletedImages[]';
+       input.value = imageUrl;
+       form.appendChild(input);
+    }
+}
+document.querySelectorAll('.awc-images img').forEach(img => {
+  img.addEventListener('click', function () {
+    const modal = document.createElement('div');
+    modal.style.position = 'fixed';
+    modal.style.top = '50%';
+    modal.style.left = '50%';
+    modal.style.transform = 'translate(-50%, -50%)';
+    modal.style.zIndex = '1000';
+    modal.style.background = '#fff';
+    modal.style.borderRadius = '10px';
+    modal.style.padding = '10px';
+    modal.style.boxShadow = '0 4px 10px rgba(0, 0, 0, 0.3)';
+    modal.innerHTML = `<img src="${img.src}" style="max-width: 100%; height: auto;"/>`;
+    document.body.appendChild(modal);
+
+    modal.addEventListener('click', () => {
+      modal.remove();
+    });
+  });
+});
+// Function to open the popup and populate with tile data
+function previewTile(awc) {
+  // Populate form fields
+  document.getElementById("popupAWC").value = awc.awc || '';
+  document.getElementById("popupScheme").value = awc.scheme || '';
+  document.getElementById("popupStatus").value = awc.status || '';
+  document.getElementById("popupBlock").value = awc.block.name || '';
+  document.getElementById("popupGp").value = awc.gp.name || '';
+  document.getElementById("popupVillage").value = awc.village.name || '';
+  document.getElementById("popupFY").value = awc.financialYear || '';
+  document.getElementById("popupTypeOfWork").value = awc.typeOfWork || '';
+  document.getElementById("popupSanctionOrder").value = awc.sanctionOrder || '';
+  document.getElementById("popupWCD").value = awc.WCD || '';
+  document.getElementById("popupNREGA").value = awc.NREGA || '';
+  document.getElementById("popupOther").value = awc.other || '';
+  document.getElementById("popupTotal").value = awc.total || '';
+  document.getElementById("popupRemark").value = awc.remark || '';
+  document.getElementById("popupExpenditure").value = awc.expenditure || '';
+  document.getElementById("popupDrinkingWater").value = awc.drinkingWater || '';
+  document.getElementById("popupElectrification").value = awc.status || '';
+  const awcId = awc._id;
+  console.log("awc id : "+ awcId);
+  document.getElementById("editBtn").onclick = () => {
+    window.location.href = "/edit/" + awcId;
+  };
+  // Populate images
+  const popupImages = document.getElementById("popupImages");
+  popupImages.innerHTML = ""; // Clear existing images
+  if (awc.images && awc.images.length > 0) {
+    awc.images.forEach((image) => {
+      const imgDiv = document.createElement("div");
+      imgDiv.style.position = "relative";
+
+      const img = document.createElement("img");
+      img.src = `/uploads/${image}`;
+      img.style.width = "100px";
+      img.style.height = "100px";
+      img.style.objectFit = "cover";
+      img.style.marginRight = "10px";
+      imgDiv.appendChild(img);
+
+      // const deleteBtn = document.createElement("button");
+      // deleteBtn.innerText = "X";
+      // deleteBtn.style.cssText =
+      //   "position: absolute; top: 5px; right: 5px; background: red; color: white; border: none; border-radius: 50%; cursor: pointer;";
+      // deleteBtn.onclick = () => imgDiv.remove(); // Remove image preview
+      // imgDiv.appendChild(deleteBtn);
+
+      popupImages.appendChild(imgDiv);
+    });
+  }
+
+  // Show popup
+  document.getElementById("tilePopup").style.display = "block";
+  document.getElementById("popupOverlay").style.display = "block";
+}
+
+// Close popup
+function closePopup() {
+  document.getElementById("tilePopup").style.display = "none";
+  document.getElementById("popupOverlay").style.display = "none";
+}
+
+// Save changes from popup
+function saveChanges() {
+  const updatedData = {
+    awc: document.getElementById("popupAWC").value,
+    scheme: document.getElementById("popupScheme").value,
+    status: document.getElementById("popupStatus").value,
+  };
+
+  console.log("Updated Data:", updatedData);
+
+  // TODO: Add code to send updated data to the server via AJAX or form submission
+  closePopup();
+}
 
 $(document).ready(function(){
   $('[data-toggle="tooltip"]').tooltip();
