@@ -187,92 +187,9 @@
 
             <!-- Background Overlay -->
             <div id="popupOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 999;" onclick="closePopup()"></div>
-            <!-- <div style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
-               <% if (users && users.length > 0) { %>
-                 <% users.forEach(awc => { %>
-                   <div class="awc-card">
-                     <% if (awc.images && awc.images.length > 0) { %>
-                       <div class="awc-images">
-                         <% awc.images.forEach(image => { %>
-                           <img src="<%= '/uploads/' + image %>" alt="AWC Image" />
-                         <% }) %>
-                       </div>
-                     <% } %>
-                     <h3><%= awc.awc %></h3>
-                     <p><strong>Scheme:</strong> <%= awc.scheme %></p>
-                     <p><strong>Financial Year:</strong> <%= awc.financialYear %></p>
-                     <p><strong>Block:</strong> <%= awc.block.name %></p>
-                     <p><strong>Gram Panchayat:</strong> <%= awc.gp.name %></p>
-                     <p><strong>Village:</strong> <%= awc.village.name %></p>
-                     <p><strong>Status:</strong> <%= awc.status %></p>
-                     <p><a class="btn btn-primary btn-xs" href="/edit/<%= awc._id %>"><i class="fas fa-edit"></i></a></br></p>
-                   </div>
-                 <% }) %>
 
-               <% } else { %>
-                 <p>No AWC details available.</p>
-               <% } %>
+         </div>
 
-
-         </div> -->
-         <!-- <div id="TableData" class="tabcontent container mt-5">
-           <h3>AWC Details</h3>
-
-           <table id="usersTable"  class="table table-striped" style="width:100%">
-              <thead>
-                 <tr>
-                    <th>Scheme</th>
-                    <th>Financial year</th>
-                    <th>Name of the Block</th>
-                    <th>Type of Work</th>
-                    <th>Sanction Order No with Date</th>
-                    <th>Name of the GP</th>
-                    <th>Name of the Village</th>
-                    <th>Name of the AWC</th>
-                    <th>W&CD</th>
-                    <th>NREGA</th>
-                    <th>Other</th>
-                    <th>Total</th>
-                    <th>Exenditure</th>
-                    <th>Status</th>
-                    <th>Remark</th>
-                    <th>Drinking Water</th>
-                    <th>Electrification</th>
-                    <th>Toilet</th>
-                    <th>Action</th>
-                 </tr>
-              </thead>
-              <tbody>
-                 <% users.forEach(function(user) { %>
-                 <tr>
-                    <td><%= user.scheme %></td>
-                    <td><%= user.financialYear %></td>
-                    <td><%= user.block.name %></td>
-                    <td><%= user.typeOfWork %></td>
-                    <td><%= user.sanctionOrder %></td>
-                    <td><%= user.gp.name %></td>
-                    <td><%= user.village.name %></td>
-                    <td><%= user.awc %></td>
-                    <td><%= user.WCD %></td>
-                    <td><%= user.NREGA %></td>
-                    <td><%= user.other %></td>
-                    <td><%= user.total %></td>
-                    <td><%= user.expenditure %></td>
-                    <td><%= user.status %></td>
-                    <td><%= user.remark %></td>
-                    <td><%= user.drinkingWater === false ? "No" : "Yes" %></td>
-                    <td><%= user.electrification === false ? "No" : "Yes" %></td>
-                    <td><%= user.toilet === false ? "No" : "Yes" %></td>
-                    <td>
-                       <a class="btn btn-primary btn-xs" href="/edit/<%= user._id %>"><i class="fas fa-edit"></i></a></br>
-                       <!-- <a class="btn btn-danger btn-xs" href="/delete/<%= user._id %>"><i class="fas fa-trash-alt"></i></a> -->
-                    <!-- </td>
-                 </tr>
-                 <% }) %>
-              </tbody>
-           </table>
-
-         </div> --> -->
          <div id="FormPage" class="tabcontent">
            <form id="addUserForm" action="/submit" method="POST" enctype="multipart/form-data">
              <div class="form-group">
