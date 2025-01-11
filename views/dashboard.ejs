@@ -98,6 +98,7 @@
          <!-- Table Data Tab Content -->
          <div id="TileData" class="tabcontent container mt-5">
             <form action="/search" method="GET">
+
               <div class="col-md-5">
                 <label for="blockSelect" class="form-label">Block</label>
                 <select class="form-control" id="blockSelect2" name="block" required>
@@ -123,11 +124,18 @@
                   <option value="">Select Village</option>
                 </select>
               </div>
-               <div class="col-md-5">
+              <div class="col-md-5">
                  <input type="text" id="awcName" name="awcName" placeholder="Search by AWC name...">
                </div>
-               <button id="btnSearch" type="submit">Search</button>
+             <button id="btnSearch" type="submit">Search</button>
             </form>
+            <div style="margin-bottom: 15px;">
+              <label class="switch">
+                 <input type="checkbox" id="viewToggle" onchange="toggleViewSlider()">
+                 <span class="slider round"></span>
+              </label>
+              <span id="viewLabel">Tiles View</span>
+            </div>
             <div id="tileContainer" style="display: flex; flex-wrap: wrap; gap: 15px;">
               <% users.forEach((awc) => { %>
                 <div class="tile" style="width: 200px; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-shadow: 2px 2px 5px rgba(0,0,0,0.1);">
@@ -181,6 +189,7 @@
 
                 <div id="popupImages" style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 10px;"></div>
                 <button type="button" id="editBtn" class="btn btn-success" style="margin-top: 10px;">Edit</button>
+                <button type="button" id="btnPrint" class="btn btn-primary" style="margin-top: 10px;">Print</button>
                 <button type="button" onclick="closePopup()" class="btn btn-secondary" style="margin-top: 10px;">Cancel</button>
               </form>
             </div>
@@ -188,6 +197,63 @@
             <!-- Background Overlay -->
             <div id="popupOverlay" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 999;" onclick="closePopup()"></div>
 
+            <div id="TableData" style="display: none;" class="tabcontent container mt-5">
+              <h3>AWC Details</h3>
+
+              <table id="usersTable"  class="table table-striped" style="width:100%">
+                <thead>
+                   <tr>
+                      <th>Scheme</th>
+                      <th>Financial year</th>
+                      <th>Name of the Block</th>
+                      <th>Type of Work</th>
+                      <th>Sanction Order No with Date</th>
+                      <th>Name of the GP</th>
+                      <th>Name of the Village</th>
+                      <th>Name of the AWC</th>
+                      <th>W&CD</th>
+                      <th>NREGA</th>
+                      <th>Other</th>
+                      <th>Total</th>
+                      <th>Exenditure</th>
+                      <th>Status</th>
+                      <th>Remark</th>
+                      <th>Drinking Water</th>
+                      <th>Electrification</th>
+                      <th>Toilet</th>
+                      <th>Action</th>
+                   </tr>
+                </thead>
+                <tbody>
+                   <% users.forEach(function(user) { %>
+                   <tr>
+                      <td><%= user.scheme %></td>
+                      <td><%= user.financialYear %></td>
+                      <td><%= user.block.name %></td>
+                      <td><%= user.typeOfWork %></td>
+                      <td><%= user.sanctionOrder %></td>
+                      <td><%= user.gp.name %></td>
+                      <td><%= user.village.name %></td>
+                      <td><%= user.awc %></td>
+                      <td><%= user.WCD %></td>
+                      <td><%= user.NREGA %></td>
+                      <td><%= user.other %></td>
+                      <td><%= user.total %></td>
+                      <td><%= user.expenditure %></td>
+                      <td><%= user.status %></td>
+                      <td><%= user.remark %></td>
+                      <td><%= user.drinkingWater === false ? "No" : "Yes" %></td>
+                      <td><%= user.electrification === false ? "No" : "Yes" %></td>
+                      <td><%= user.toilet === false ? "No" : "Yes" %></td>
+                      <td>
+                         <a class="btn btn-primary btn-xs" href="/edit/<%= user._id %>"><i class="fas fa-edit"></i></a></br>
+                         <a class="btn btn-primary btn-xs" onclick="previewTile(<%= JSON.stringify(user) %>)"><i class="fas fa-eye"></i></a>
+                      </td>
+                   </tr>
+                   <% }) %>
+                </tbody>
+              </table>
+            </div>
          </div>
 
          <div id="FormPage" class="tabcontent">

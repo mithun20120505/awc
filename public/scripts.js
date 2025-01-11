@@ -115,6 +115,77 @@ document.querySelectorAll('.awc-images img').forEach(img => {
     });
   });
 });
+function printAWC(awc) {
+  console.log("awc : "+ awc);
+  // Create a printable HTML structure
+  let imagesContent = "";
+  if (awc.images && awc.images.length > 0) {
+    imagesContent = `
+    <div style="margin-top: 20px;">
+      <h3 style="text-align: center;">Images</h3>
+      <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
+        ${awc.images
+          .map(
+            (image) => `
+            <div style="border: 1px solid #ddd; padding: 5px; border-radius: 5px;">
+              <img src="${window.location.origin}/uploads/${image}" alt="AWC Image" style="max-width: 200px; max-height: 150px; display: block; margin: auto;">
+            </div>
+          `
+          )
+          .join("")}
+      </div>
+    </div>
+    `;
+  } else {
+    imagesContent = `<p style="text-align: center; margin-top: 20px;">No images available</p>`;
+  }
+  const printContent = `
+    <div style="padding: 20px; font-family: Arial, sans-serif;">
+      <h2 style="text-align: center;">AWC Details</h2>
+      <p><strong>Scheme:</strong> ${awc.scheme}</p>
+      <p><strong>Financial Year:</strong> ${awc.financialYear}</p>
+      <p><strong>Name of the Block:</strong> ${awc.block?.name || "N/A"}</p>
+      <p><strong>Type of Work:</strong> ${awc.typeOfWork}</p>
+      <p><strong>Sanction Order No with Date:</strong> ${awc.sanctionOrder}</p>
+      <p><strong>Name of the GP:</strong> ${awc.gp?.name || "N/A"}</p>
+      <p><strong>Name of the Village:</strong> ${awc.village?.name || "N/A"}</p>
+      <p><strong>Name of the AWC:</strong> ${awc.awc}</p>
+      <p><strong>W&CD:</strong> ${awc.WCD}</p>
+      <p><strong>NREGA:</strong> ${awc.NREGA}</p>
+      <p><strong>Other:</strong> ${awc.other}</p>
+      <p><strong>Total:</strong> ${awc.total}</p>
+      <p><strong>Expenditure:</strong> ${awc.expenditure}</p>
+      <p><strong>Status:</strong> ${awc.status}</p>
+      <p><strong>Remark:</strong> ${awc.remark}</p>
+      <p><strong>Drinking Water:</strong> ${awc.drinkingWater === false ? "No" : "Yes"}</p>
+      <p><strong>Electrification:</strong> ${awc.electrification === false ? "No" : "Yes"}</p>
+      <p><strong>Toilet:</strong> ${awc.toilet === false ? "No" : "Yes"}</p>
+      ${imagesContent}
+    </div>
+  `;
+
+  // Open a new window or tab for printing
+  const printWindow = window.open('', '_blank', 'width=800,height=600');
+  printWindow.document.write(`
+    <html>
+      <head>
+        <title>Print AWC Details</title>
+      </head>
+      <body>
+        ${printContent}
+      </body>
+    </html>
+  `);
+
+  // Wait for content to load and then trigger print
+  printWindow.document.close();
+  printWindow.onload = () => {
+    printWindow.focus();
+    printWindow.print();
+    printWindow.close();
+  };
+}
+
 // Function to open the popup and populate with tile data
 function previewTile(awc) {
   // Populate form fields
@@ -140,6 +211,9 @@ function previewTile(awc) {
   document.getElementById("editBtn").onclick = () => {
     window.location.href = "/edit/" + awcId;
   };
+  document.getElementById("btnPrint").onclick = function () {
+    printAWC(awc);
+  }
   // Populate images
   const popupImages = document.getElementById("popupImages");
   popupImages.innerHTML = ""; // Clear existing images
@@ -190,6 +264,22 @@ function saveChanges() {
 
   // TODO: Add code to send updated data to the server via AJAX or form submission
   closePopup();
+}
+function toggleViewSlider() {
+   const isChecked = document.getElementById('viewToggle').checked;
+   const tileContainer = document.getElementById('tileContainer');
+   const tableData = document.getElementById('TableData');
+   const viewLabel = document.getElementById('viewLabel');
+
+   if (isChecked) {
+      tileContainer.style.display = 'none';
+      tableData.style.display = 'block';
+      viewLabel.textContent = 'Table View';
+   } else {
+      tileContainer.style.display = 'flex';
+      tableData.style.display = 'none';
+      viewLabel.textContent = 'Tiles View';
+   }
 }
 
 $(document).ready(function(){
