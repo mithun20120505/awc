@@ -115,6 +115,45 @@ document.querySelectorAll('.awc-images img').forEach(img => {
     });
   });
 });
+function getImageUrl(images) {
+  // If the image list is not empty, return the first image URL
+  if (images.length > 0) {
+    return images[0]; // Use the first image
+  } else {
+    // Return a default image URL or an empty string if no images are available
+    return "default-image.jpg";
+  }
+}
+function downloadExcel() {
+  // Get the table element
+  const table = document.querySelector('#usersTable'); // Replace with your table's ID
+
+  // Initialize an array to store the table data
+  const rows = [];
+
+  // Extract table headers
+  const headers = Array.from(table.querySelectorAll('thead th')).map(header => header.innerText);
+  rows.push(headers);
+
+  // Extract table rows
+  const tableRows = table.querySelectorAll('tbody tr');
+  tableRows.forEach(row => {
+    const cells = Array.from(row.querySelectorAll('td')).map(cell => cell.innerText);
+    rows.push(cells);
+  });
+
+  // Convert the rows array into a worksheet
+  const worksheet = XLSX.utils.aoa_to_sheet(rows);
+
+  // Create a new workbook and append the worksheet
+  const workbook = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Sheet1');
+
+  // Export the workbook as an Excel file
+  XLSX.writeFile(workbook, 'table-data.xlsx'); // File name
+}
+
+
 function printAWC(awc) {
   console.log("awc : "+ awc);
   // Create a printable HTML structure
@@ -161,6 +200,7 @@ function printAWC(awc) {
       <p><strong>Electrification:</strong> ${awc.electrification === false ? "No" : "Yes"}</p>
       <p><strong>Toilet:</strong> ${awc.toilet === false ? "No" : "Yes"}</p>
       ${imagesContent}
+      <p><strong>Authorized By</strong></p>
     </div>
   `;
 

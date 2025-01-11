@@ -384,3 +384,71 @@ background-color: #ccc;
    input:checked + .slider:before {
       transform: translateX(24px);
    }
+   .tile {
+  width: 200px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  overflow: hidden;
+  text-align: center;
+  margin: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.image-container {
+  width: 150px; /* Adjust the width of the tile */
+  height: 100px; /* Adjust the height of the tile */
+  margin: 10px; /* Add spacing between tiles */
+  overflow: hidden; /* Ensure content doesn't overflow the tile */
+  border: 1px solid #ddd; /* Optional: add a border for styling */
+  border-radius: 5px; /* Optional: add rounded corners */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Optional: add a subtle shadow */
+}
+
+.image-container img {
+  width: 100%; /* Ensure image fits the tile width */
+  height: 100px; /* Set image height */
+  border-bottom: 1px solid #ddd; /* Separate the image from the text */
+}
+
+.text-container {
+  padding: 5px; /* Add some padding around the text */
+  font-size: 12px; /* Adjust font size for smaller text */
+  text-align: center; /* Center-align the text */
+  line-height: 1.2; /* Reduce line height for compactness */
+}
+.text-container .title {
+  font-weight: bold; /* Highlight the title */
+}
+
+.text-container .details {
+  color: #555; /* Subtle color for details */
+}
+.content {
+  padding: 10px;
+}
+
+.preview-btn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.preview-btn:hover {
+  background-color: #0056b3;
+}
+.small-button {
+  width: 100px; /* You can adjust this value */
+  padding: 5px 10px; /* Adjust padding to control the button size */
+  font-size: 14px;         /* Pointer cursor on hover */
+}
+
+.small-button:hover {
+  background-color: #0056b3; /* Darker shade on hover */
+}
+
+.small-button:active {
+  background-color: #003f7f; /* Even darker on click */
+}
