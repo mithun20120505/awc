@@ -25,6 +25,301 @@
 //       console.log("previewImage file reader : "+ reader);
 //   }
 // }
+function generatePrintablePage(other, data) {
+      // Extract data
+      const {
+        certification,
+        handedOver,
+        takenOver,
+      } = other;
+      let imagesContent = "";
+      if (data.images && data.images.length > 0) {
+        imagesContent = `
+        <div style="margin-top: 20px;">
+          <h3 style="text-align: center;">Images</h3>
+          <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
+            ${data.images
+              .map(
+                (image) => `
+                <div style="flex: 1 0 200px; max-width: 200px; border: 1px solid #ddd; padding: 5px; border-radius: 5px;">
+                  <img src="${window.location.origin}/uploads/${image}" alt="AWC Image" style="max-width: 200px; max-height: 150px; display: block; margin: auto;">
+                </div>
+              `
+              )
+              .join("")}
+          </div>
+        </div>
+        `;
+      } else {
+        imagesContent = `<p style="text-align: center; margin-top: 20px;">No images available</p>`;
+      }
+      // Create HTML structure dynamically
+      let html = `
+    <div class="container">
+      <!-- First Section: Project Info -->
+      <div class="section">
+        <div class="headline">
+          <h2>AWC Handed Over</h2>
+        </div>
+        <div class="row">
+          <div><span>Name of Project:</span> ${data.awc}</div>
+        </div>
+        <div class="row">
+          <div><span>Name of Block:</span> ${data.block.name}</div>
+        </div>
+        <div class="row">
+          <div><span>Name of Gram Panchayat:</span> ${data.gp.name}</div>
+        </div>
+        <div class="row">
+          <div><span>Name of Village:</span> ${data.village.name}</div>
+        </div>
+      </div>
+
+      <!-- Second Section: Schemes -->
+      <div class="section schemes">
+        <h3>Schemes</h3>
+        `;
+      if (data.WCD && parseFloat(data.WCD) !== 0) {
+          html += `
+            <div class="section scheme-card">
+              <div class="row">
+                <span>Scheme:</span> WCD
+              </div>
+              <div class="row">
+                <span>Financial Year:</span> ${data.financialYear || "N/A"}
+              </div>
+              <div class="row">
+                <span>Sanction No. with Order:</span> ${data.sanctionOrder || "N/A"}
+              </div>
+              <div class="row">
+                <span>Estimated Cost:</span> ${data.WCD}
+              </div>
+            </div>
+
+          `;
+        }
+
+        // Add NREGA Scheme if value != 0
+      if (data.NREGA && parseFloat(data.NREGA) !== 0) {
+      html += `
+
+        <div class="section scheme-card">
+          <div class="row">
+            <span>Scheme:</span> NREGA
+          </div>
+          <div class="row">
+            <span>Financial Year:</span> ${data.financialYear || "N/A"}
+          </div>
+          <div class="row">
+            <span>Sanction No. with Order:</span> ${data.sanctionOrder || "N/A"}
+          </div>
+          <div class="row">
+            <span>Estimated Cost:</span> ${data.NREGA}
+          </div>
+        </div>
+
+      `;
+    }
+      // Add Other Scheme if value != 0
+      if (data.other && parseFloat(data.other) !== 0) {
+        html += `
+
+          <div class="section scheme-card">
+            <div class="row">
+              <span>Scheme:</span> ${data.scheme || "Other"}
+            </div>
+            <div class="row">
+              <span>Financial Year:</span> ${data.financialYear || "N/A"}
+            </div>
+            <div class="row">
+              <span>Sanction No. with Order:</span> ${data.sanctionOrder || "N/A"}
+            </div>
+            <div class="row">
+              <span>Estimated Cost:</span> ${data.other}
+            </div>
+          </div>
+
+        `;
+      }
+      <!-- Third Section: Common Data -->
+      html += `<div class="section">
+
+        <div class="row">
+          <div><span>Drinking Water:</span> ${data.drinkingWater ? "Yes" : "No"}</div>
+        </div>
+        <div class="row">
+          <div><span>Electrification:</span> ${data.electrification ? "Yes" : "No"}</div>
+        </div>
+        <div class="row">
+          <div><span>Toilet:</span> ${data.toilet ? "Yes" : "No"}</div>
+        </div>
+      </div>
+      `;
+      <!-- Fourth Section: Photos -->
+      html += `<div class="section">
+        <div class="short_headline">
+          <h3>Photos and Documents</h3>
+        </div>
+        <div class="images">
+          ${imagesContent}
+        </div>
+      </div>
+      `;
+      <!-- Fifth Section: Certification -->
+      html += `<div class="certified">
+        ${certification}
+      </div>
+
+      <!-- Sixth Section: Signatures -->
+      <div class="footer">
+        <div class="row">
+          <div class="left">
+            <p class="signature">${handedOver.title}</p>
+            <p>${handedOver.role}</p>
+          </div>
+          <div class="right">
+            <p class="signature">${takenOver.title}</p>
+            <p>${takenOver.role}</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  `;
+
+  // Inject into the body or a specific container
+  //document.body.innerHTML = html;
+
+  // Optional: Automatically print the page
+  //window.print();
+
+    const printWindow = window.open('', '_blank', 'width=800,height=600');
+    printWindow.document.write(`
+      <html>
+        <head>
+          <title>Print AWC HandOver</title>
+          <style>
+            @page {
+              size: A4;
+              margin: 20mm;
+            }
+
+            body {
+              font-family: Arial, sans-serif;
+              margin: 0;
+              padding: 0;
+            }
+            .headline{
+              text-align: center;
+              text-decoration: underline;
+              justify-content: center;
+            }
+            .short_headline{
+              text-align: center;
+              justify-content: center;
+            }
+            .section {
+              margin-bottom: 20px; /* Adds space between sections */
+            }
+            .scheme-card {
+              padding: 10px;
+              border: 1px solid #ddd;
+              margin-bottom: 20px; /* Space between scheme cards */
+            }
+            .content {
+              padding: 15px;
+              font-size: 12px;
+              line-height: 1.4;
+            }
+
+            h2 {
+              text-align: center;
+              font-size: 18px;
+            }
+
+            p {
+              margin: 5px 0;
+            }
+
+            strong {
+              font-weight: bold;
+            }
+
+            img {
+              width: 100%;
+              height: auto;
+            }
+
+            .image-container {
+              display: flex;
+              flex-wrap: wrap;
+              gap: 10px;
+              justify-content: center;
+            }
+
+            .image-container div {
+              flex: 1 0 200px;
+              max-width: 200px;
+              border: 1px solid #ddd;
+              padding: 5px;
+              border-radius: 5px;
+              text-align: center;
+            }
+            .auth{
+
+            }
+            .row {
+              display: flex;
+              // justify-content: space-between;
+              align-items: center;
+              margin-top: 6px;
+            }
+            .row .left,
+            .row .right {
+              width: 45%; /* Adjust width as needed */
+              text-align: center;
+            }
+            .left {
+              text-align: left; /* Align text to the left */
+            }
+            .right {
+              text-align: right; /* Align text to the right */
+            }
+            .signature {
+              margin-top: 40px;
+              font-weight: bold;
+            }
+          </style>
+        </head>
+        <body>
+          ${html}
+        </body>
+      </html>
+    `);
+
+    // Wait for content to load and then trigger print
+    printWindow.document.close();
+    printWindow.onload = () => {
+      printWindow.focus();
+      printWindow.print();
+      printWindow.close();
+    };
+}
+// Example data object
+const other = {
+  certification: "Certified that the above project has been completed successfully in all respects.",
+  handedOver: {
+    title: "Handed Over By",
+    role: "Block Development Officer",
+    signature: "https://via.placeholder.com/100x50",
+  },
+  takenOver: {
+    title: "Taken Over By",
+    role: "CDPO Officer",
+    signature: "https://via.placeholder.com/100x50",
+  },
+};
+
 $(document).ready(function () {
   $('#images').on('change', function (event) {
     const files = event.target.files; // Get the selected files
@@ -166,7 +461,7 @@ function printAWC(awc) {
         ${awc.images
           .map(
             (image) => `
-            <div style="border: 1px solid #ddd; padding: 5px; border-radius: 5px;">
+            <div style="flex: 1 0 200px; max-width: 200px; border: 1px solid #ddd; padding: 5px; border-radius: 5px;">
               <img src="${window.location.origin}/uploads/${image}" alt="AWC Image" style="max-width: 200px; max-height: 150px; display: block; margin: auto;">
             </div>
           `
@@ -179,28 +474,30 @@ function printAWC(awc) {
     imagesContent = `<p style="text-align: center; margin-top: 20px;">No images available</p>`;
   }
   const printContent = `
-    <div style="padding: 20px; font-family: Arial, sans-serif;">
-      <h2 style="text-align: center;">AWC Details</h2>
-      <p><strong>Scheme:</strong> ${awc.scheme}</p>
-      <p><strong>Financial Year:</strong> ${awc.financialYear}</p>
-      <p><strong>Name of the Block:</strong> ${awc.block?.name || "N/A"}</p>
-      <p><strong>Type of Work:</strong> ${awc.typeOfWork}</p>
-      <p><strong>Sanction Order No with Date:</strong> ${awc.sanctionOrder}</p>
-      <p><strong>Name of the GP:</strong> ${awc.gp?.name || "N/A"}</p>
-      <p><strong>Name of the Village:</strong> ${awc.village?.name || "N/A"}</p>
-      <p><strong>Name of the AWC:</strong> ${awc.awc}</p>
-      <p><strong>W&CD:</strong> ${awc.WCD}</p>
-      <p><strong>NREGA:</strong> ${awc.NREGA}</p>
-      <p><strong>Other:</strong> ${awc.other}</p>
-      <p><strong>Total:</strong> ${awc.total}</p>
-      <p><strong>Expenditure:</strong> ${awc.expenditure}</p>
-      <p><strong>Status:</strong> ${awc.status}</p>
-      <p><strong>Remark:</strong> ${awc.remark}</p>
-      <p><strong>Drinking Water:</strong> ${awc.drinkingWater === false ? "No" : "Yes"}</p>
-      <p><strong>Electrification:</strong> ${awc.electrification === false ? "No" : "Yes"}</p>
-      <p><strong>Toilet:</strong> ${awc.toilet === false ? "No" : "Yes"}</p>
-      ${imagesContent}
-      <p><strong>Authorized By</strong></p>
+    <div style="padding: 20px; font-family: Arial, sans-serif;  font-size: 12px; line-height: 1.4;>
+      <div style="flex: 1; padding-right: 20px;">
+        <h2 style="text-align: center;">AWC Details</h2>
+        <p><strong>Scheme:</strong> ${awc.scheme}</p>
+        <p><strong>Financial Year:</strong> ${awc.financialYear}</p>
+        <p><strong>Name of the Block:</strong> ${awc.block?.name || "N/A"}</p>
+        <p><strong>Type of Work:</strong> ${awc.typeOfWork}</p>
+        <p><strong>Sanction Order No with Date:</strong> ${awc.sanctionOrder}</p>
+        <p><strong>Name of the GP:</strong> ${awc.gp?.name || "N/A"}</p>
+        <p><strong>Name of the Village:</strong> ${awc.village?.name || "N/A"}</p>
+        <p><strong>Name of the AWC:</strong> ${awc.awc}</p>
+        <p><strong>W&CD:</strong> ${awc.WCD}</p>
+        <p><strong>NREGA:</strong> ${awc.NREGA}</p>
+        <p><strong>Other:</strong> ${awc.other}</p>
+        <p><strong>Total:</strong> ${awc.total}</p>
+        <p><strong>Expenditure:</strong> ${awc.expenditure}</p>
+        <p><strong>Status:</strong> ${awc.status}</p>
+        <p><strong>Remark:</strong> ${awc.remark}</p>
+        <p><strong>Drinking Water:</strong> ${awc.drinkingWater === false ? "No" : "Yes"}</p>
+        <p><strong>Electrification:</strong> ${awc.electrification === false ? "No" : "Yes"}</p>
+        <p><strong>Toilet:</strong> ${awc.toilet === false ? "No" : "Yes"}</p>
+        ${imagesContent}
+        <div class="auth">Authorized By</div>
+      </div>
     </div>
   `;
 
@@ -210,6 +507,61 @@ function printAWC(awc) {
     <html>
       <head>
         <title>Print AWC Details</title>
+        <style>
+          @page {
+            size: A4;
+            margin: 20mm;
+          }
+
+          body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+          }
+
+          .content {
+            padding: 15px;
+            font-size: 12px;
+            line-height: 1.4;
+          }
+
+          h2 {
+            text-align: center;
+            font-size: 18px;
+          }
+
+          p {
+            margin: 5px 0;
+          }
+
+          strong {
+            font-weight: bold;
+          }
+
+          img {
+            width: 100%;
+            height: auto;
+          }
+
+          .image-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+          }
+
+          .image-container div {
+            flex: 1 0 200px;
+            max-width: 200px;
+            border: 1px solid #ddd;
+            padding: 5px;
+            border-radius: 5px;
+            text-align: center;
+          }
+          .auth{
+
+          }
+        </style>
       </head>
       <body>
         ${printContent}
@@ -252,7 +604,7 @@ function previewTile(awc) {
     window.location.href = "/edit/" + awcId;
   };
   document.getElementById("btnPrint").onclick = function () {
-    printAWC(awc);
+    generatePrintablePage(other, awc);
   }
   // Populate images
   const popupImages = document.getElementById("popupImages");

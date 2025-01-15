@@ -178,7 +178,7 @@ async function getUserVillages(userId) {
   }
 }
 
-router.get('/dashboard',ensureAuthenticated, async (req, res) => {
+router.get('/dashboard', ensureAuthenticated, async (req, res) => {
     const users = await Survey.find()
     .populate({ path: 'block', select: 'name' })
     .populate({ path: 'gp', select: 'name' })
@@ -194,6 +194,52 @@ router.get('/dashboard',ensureAuthenticated, async (req, res) => {
     res.render('dashboard', { users, user: user, blocks: userVillages,
       messageType: messageType, message: message
      });
+});
+router.get('/handover',ensureAuthenticated, async (req, res) =>{
+    const users = await Survey.find()
+    .populate({ path: 'block', select: 'name' })
+    .populate({ path: 'gp', select: 'name' })
+    .populate({ path: 'village', select: 'name' }).exec();
+    const user = await req.user;
+    // console.log("awc details : "+ users);
+    const userVillages = await Block.find();
+      var messageType = req.session.messageType;
+      var message = req.session.messages;
+      req.session.messageType = null;
+      req.session.messages = null;
+    res.render('handover', { users, user: user, blocks: userVillages,
+      messageType: messageType, message: message
+     });
+})
+router.get('/searchAwc', async (req, res) => {
+  try {
+    const { awcName, block, gramPanchayat, village } = req.query;
+    console.log("block query: "+ block);
+    console.log("gramPanchayat query : "+ gramPanchayat);
+    console.log("village query: "+ village);
+    const searchQuery = {};
+    if (block) searchQuery.block = block;
+    if (gramPanchayat) searchQuery.gp = gramPanchayat;
+    if (village) searchQuery.village = village; //{ $regex: village, $options: 'i' };
+    if (awcName) searchQuery.awcName = { $regex: awcName, $options: 'i' };
+
+    const users = await Survey.find(searchQuery)
+      .populate({ path: 'block', select: 'name' })
+      .populate({ path: 'gp', select: 'name' })
+      .populate({ path: 'village', select: 'name' })
+      .select('scheme financialYear sanctionOrder other total expenditure');
+    console.log("users at search get : "+ users);
+    // Render only the search results (no layout)
+    const user = await req.user;
+    const userVillages = await Block.find();
+    const messageType = req.session.messageType || ""; // Default to empty string if undefined
+    const message = req.session.message || "";
+   res.render('handover', { users, user : user, blocks: userVillages,
+   messageType: messageType, message: message });
+ } catch (err) {
+   res.status(500).send('Server Error');
+   logger.error(err);
+ }
 });
 router.post('/update/:id',upload.array('images', 10), async (req, res) => {
   const imageName = req.files.map(file => file.filename);
