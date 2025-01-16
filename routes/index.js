@@ -389,7 +389,7 @@ router.get('/search', async (req, res) => {
     if (block) searchQuery.block = block;
     if (gramPanchayat) searchQuery.gp = gramPanchayat;
     if (village) searchQuery.village = village; //{ $regex: village, $options: 'i' };
-    if (awcName) searchQuery.awcName = { $regex: awcName, $options: 'i' };
+    if (awcName) searchQuery.awc = { $regex: awcName, $options: 'i' };
     const users = await Survey.find(searchQuery)
       .populate({ path: 'block', select: 'name' })
       .populate({ path: 'gp', select: 'name' })
