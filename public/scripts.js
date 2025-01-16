@@ -36,7 +36,6 @@ function generatePrintablePage(other, data) {
       if (data.images && data.images.length > 0) {
         imagesContent = `
         <div style="margin-top: 20px;">
-          <h3 style="text-align: center;">Images</h3>
           <div style="display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;">
             ${data.images
               .map(
@@ -287,6 +286,9 @@ function generatePrintablePage(other, data) {
             }
             .signature {
               margin-top: 40px;
+              font-weight: bold;
+            }
+            .certified{
               font-weight: bold;
             }
           </style>
@@ -597,7 +599,8 @@ function previewTile(awc) {
   document.getElementById("popupRemark").value = awc.remark || '';
   document.getElementById("popupExpenditure").value = awc.expenditure || '';
   document.getElementById("popupDrinkingWater").value = awc.drinkingWater || '';
-  document.getElementById("popupElectrification").value = awc.status || '';
+  document.getElementById("popupElectrification").value = awc.electrification || '';
+  document.getElementById("popupToilet").value = awc.toilet || '';
   const awcId = awc._id;
   console.log("awc id : "+ awcId);
   document.getElementById("editBtn").onclick = () => {
